@@ -13,6 +13,7 @@ export default function LoginPage() {
     if (username === "admin" && password === "10011001") {
       if (typeof window !== "undefined") {
         localStorage.setItem("isAdmin", "true")
+        localStorage.setItem("username", username)
       }
       router.replace("/")
     } else {

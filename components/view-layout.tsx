@@ -2,13 +2,14 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Plus, Building2, FileText, AlertTriangle, Search, BarChart3 } from "lucide-react"
+import { Plus, FileText, AlertTriangle, Search, BarChart3, LogOut, User } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ContractsList } from "@/components/contracts-list"
 import { ExpiredContractsList } from "@/components/expired-contracts-list"
 import { SearchContracts } from "@/components/search-contracts"
 import { StatsOverview } from "@/components/stats-overview"
 import { StatsCards } from "@/components/stats-cards"
+import { useUser } from "@/contexts/user-context"
 
 interface ViewLayoutProps {
   onSwitchToAdd: () => void
@@ -43,6 +44,12 @@ const navigation = [
 
 export function ViewLayout({ onSwitchToAdd }: ViewLayoutProps) {
   const [activeTab, setActiveTab] = useState("contracts")
+  const { user, logout } = useUser()
+
+  const handleLogout = () => {
+    logout()
+    // You can add redirect logic here if needed
+  }
 
   const renderContent = () => {
     switch (activeTab) {
@@ -98,21 +105,16 @@ export function ViewLayout({ onSwitchToAdd }: ViewLayoutProps) {
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <div className="w-80 bg-white shadow-sm border-r">
+      <div className="w-80 bg-white shadow-sm border-r flex flex-col">
         <div className="p-6 border-b">
-          <div className="flex items-center space-x-2 mb-2">
-            <Building2 className="h-6 w-6 text-blue-600" />
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">Gestionnaire des Contrats</h1>
-              <div className="text-xs text-gray-600 leading-tight">
-                <div>SARL GROUPE CMMC</div>
-                <div>Z.I OULED SALAH EMIR ABDELKADER W. JIJEL</div>
-              </div>
-            </div>
+          <h2 className="text-xl font-bold text-gray-900 mb-4">GESTIONNAIRE DES CONTRATS</h2>
+          <div className="text-xs text-gray-600 leading-tight">
+            <div>SARL GROUPE CMMC</div>
+            <div>Z.I OULED SALAH EMIR ABDELKADER W. JIJEL</div>
           </div>
         </div>
 
-        <nav className="p-4 space-y-2">
+        <nav className="p-4 space-y-2 flex-1">
           {navigation.map((item) => {
             const isActive = activeTab === item.id
             return (
@@ -142,6 +144,20 @@ export function ViewLayout({ onSwitchToAdd }: ViewLayoutProps) {
             )
           })}
         </nav>
+
+        {/* User info at bottom */}
+        <div className="p-4 border-t bg-gray-50">
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full">
+              <User className="h-4 w-4 text-blue-600" />
+            </div>
+            <div className="flex-1">
+              <div className="text-sm font-medium text-gray-900">
+                {user?.username || 'Utilisateur'}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Main Content */}
@@ -156,10 +172,16 @@ export function ViewLayout({ onSwitchToAdd }: ViewLayoutProps) {
                 </div>
               </div>
 
-              <Button onClick={onSwitchToAdd}>
-                <Plus className="h-4 w-4 mr-2" />
-                Nouveau Contrat
-              </Button>
+              <div className="flex items-center space-x-3">
+                <Button onClick={onSwitchToAdd}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  NOUVEAU CONTRAT
+                </Button>
+                <Button variant="outline" onClick={handleLogout}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  SE DÉCONNECTER
+                </Button>
+              </div>
             </div>
           </div>
         </header>
