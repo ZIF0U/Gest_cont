@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   generator: "v0.dev",
 }
 
+import AuthGuard from "@/components/AuthGuard"
+import HeaderBar from "@/components/HeaderBar"
+
 export default function RootLayout({
   children,
 }: {
@@ -20,7 +23,10 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={inter.className}>
-        {children}
+        <AuthGuard>
+          <HeaderBar />
+          {children}
+        </AuthGuard>
         <Toaster />
       </body>
     </html>

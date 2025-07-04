@@ -3,7 +3,8 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { FileText, AlertTriangle, Search, BarChart3, Building2, X } from "lucide-react"
+import { FileText, AlertTriangle, Search, BarChart3, Building2, X, ChevronLeft, ChevronRight } from "lucide-react"
+import { useState } from "react"
 
 const navigation = [
   {
@@ -34,11 +35,25 @@ const navigation = [
 
 export function ViewSidebar({ open = true, onClose }: { open?: boolean; onClose?: () => void }) {
   const pathname = usePathname()
+  // Collapsed state for desktop
+  const [collapsed, setCollapsed] = useState(false)
 
   if (!open) return null
 
   return (
-    <div className="w-80 bg-white shadow-sm border-r relative">
+    <div className={cn(
+      "bg-white shadow-sm border-r relative transition-all duration-200",
+      collapsed ? "w-16" : "w-80"
+    )}>
+      {/* Collapse/Expand arrow for desktop */}
+      <button
+        className="absolute top-2 -right-4 z-10 hidden md:flex items-center justify-center w-8 h-8 bg-white border border-gray-200 rounded-full shadow hover:bg-gray-100 transition"
+        onClick={() => setCollapsed((v) => !v)}
+        aria-label={collapsed ? "Développer le menu" : "Réduire le menu"}
+        style={{ right: collapsed ? "-1.5rem" : "-1.5rem" }}
+      >
+        {collapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
+      </button>
       {/* Close button for mobile */}
       {onClose && (
         <button
@@ -49,21 +64,23 @@ export function ViewSidebar({ open = true, onClose }: { open?: boolean; onClose?
           <X className="h-5 w-5" />
         </button>
       )}
-      <div className="p-6 border-b">
-        <div className="flex items-center space-x-2 mb-2">
+      <div className={cn("p-6 border-b", collapsed && "px-2 py-4")}> 
+        <div className="flex items-center space-x-2 mb-2 justify-center md:justify-start">
           <Building2 className="h-6 w-6 text-blue-600" />
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900">Gestion des Contrats</h2>
-            <div className="text-xs text-gray-600 leading-tight">
-              <div>SARL GROUPE CMMCZ</div>
-              <div>I OULED SALAH EMIR ABDELKADER W. JIJEL</div>
+          {!collapsed && (
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900">Gestion des Contrats</h2>
+              <div className="text-xs text-gray-600 leading-tight">
+                <div>SARL GROUPE CMMCZ</div>
+                <div>I OULED SALAH EMIR ABDELKADER W. JIJEL</div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
-        <p className="text-sm text-gray-600">Consultez et gérez vos contrats</p>
+        {!collapsed && <p className="text-sm text-gray-600">Consultez et gérez vos contrats</p>}
       </div>
 
-      <nav className="p-4 space-y-2">
+      <nav className={cn("p-4 space-y-2", collapsed && "p-2")}> 
         {navigation.map((item) => {
           const isActive = pathname === item.href
           return (
@@ -75,6 +92,7 @@ export function ViewSidebar({ open = true, onClose }: { open?: boolean; onClose?
                 isActive
                   ? "bg-blue-50 text-blue-700 border border-blue-200"
                   : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                collapsed && "justify-center px-2 py-2"
               )}
             >
               <item.icon
@@ -83,12 +101,12 @@ export function ViewSidebar({ open = true, onClose }: { open?: boolean; onClose?
                   isActive ? "text-blue-600" : "text-gray-400 group-hover:text-gray-600",
                 )}
               />
-              <div>
-                <div className="font-medium">{item.name}</div>
-                <div className={cn("text-xs mt-0.5", isActive ? "text-blue-600" : "text-gray-500")}>
-                  {item.description}
+              {!collapsed && (
+                <div>
+                  <div className="font-medium">{item.name}</div>
+                  <div className={cn("text-xs mt-0.5", isActive ? "text-blue-600" : "text-gray-500")}>{item.description}</div>
                 </div>
-              </div>
+              )}
             </Link>
           )
         })}
