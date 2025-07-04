@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { FileText, AlertTriangle, Search, BarChart3, Building2 } from "lucide-react"
+import { FileText, AlertTriangle, Search, BarChart3, Building2, X } from "lucide-react"
 
 const navigation = [
   {
@@ -32,11 +32,23 @@ const navigation = [
   },
 ]
 
-export function ViewSidebar() {
+export function ViewSidebar({ open = true, onClose }: { open?: boolean; onClose?: () => void }) {
   const pathname = usePathname()
 
+  if (!open) return null
+
   return (
-    <div className="w-80 bg-white shadow-sm border-r">
+    <div className="w-80 bg-white shadow-sm border-r relative">
+      {/* Close button for mobile */}
+      {onClose && (
+        <button
+          className="absolute top-2 right-2 p-2 rounded hover:bg-gray-200 md:hidden"
+          onClick={onClose}
+          aria-label="Fermer le menu"
+        >
+          <X className="h-5 w-5" />
+        </button>
+      )}
       <div className="p-6 border-b">
         <div className="flex items-center space-x-2 mb-2">
           <Building2 className="h-6 w-6 text-blue-600" />

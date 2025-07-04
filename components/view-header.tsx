@@ -2,14 +2,24 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Plus, Building2 } from "lucide-react"
+import { Plus, Building2, Menu } from "lucide-react"
 
-export function ViewHeader() {
+export function ViewHeader({ onToggleSidebar }: { onToggleSidebar?: () => void }) {
   return (
     <header className="bg-white shadow-sm border-b">
       <div className="px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
+            {/* Hamburger for mobile */}
+            {onToggleSidebar && (
+              <button
+                className="md:hidden mr-2 p-2 rounded hover:bg-gray-100"
+                onClick={onToggleSidebar}
+                aria-label="Ouvrir le menu"
+              >
+                <Menu className="h-6 w-6 text-blue-600" />
+              </button>
+            )}
             <div className="flex items-center space-x-2">
               <Building2 className="h-6 w-6 text-blue-600" />
               <div>
