@@ -50,7 +50,7 @@ export function ViewLayout({ onSwitchToAdd }: ViewLayoutProps) {
         return (
           <div className="space-y-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Gestion des Contrats</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Gestionnaire des Contrats</h1>
               <p className="text-gray-600">Vue d'ensemble de tous vos contrats d'employés</p>
             </div>
             <StatsCards />
@@ -103,14 +103,13 @@ export function ViewLayout({ onSwitchToAdd }: ViewLayoutProps) {
           <div className="flex items-center space-x-2 mb-2">
             <Building2 className="h-6 w-6 text-blue-600" />
             <div>
-              <h1 className="text-xl font-bold text-gray-900">Gestion des Contrats</h1>
+              <h1 className="text-xl font-bold text-gray-900">Gestionnaire des Contrats</h1>
               <div className="text-xs text-gray-600 leading-tight">
-                <div>SARL GROUPE CMMCZ</div>
-                <div>I OULED SALAH EMIR ABDELKADER W. JIJEL</div>
+                <div>SARL GROUPE CMMC</div>
+                <div>Z.I OULED SALAH EMIR ABDELKADER W. JIJEL</div>
               </div>
             </div>
           </div>
-          <p className="text-sm text-gray-600">Consultez et gérez vos contrats</p>
         </div>
 
         <nav className="p-4 space-y-2">

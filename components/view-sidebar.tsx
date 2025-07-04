@@ -33,12 +33,10 @@ const navigation = [
   },
 ]
 
-export function ViewSidebar({ open = true, onClose }: { open?: boolean; onClose?: () => void }) {
+export function ViewSidebar() {
   const pathname = usePathname()
   // Collapsed state for desktop
   const [collapsed, setCollapsed] = useState(false)
-
-  if (!open) return null
 
   return (
     <div className={cn(
@@ -54,22 +52,12 @@ export function ViewSidebar({ open = true, onClose }: { open?: boolean; onClose?
       >
         {collapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
       </button>
-      {/* Close button for mobile */}
-      {onClose && (
-        <button
-          className="absolute top-2 right-2 p-2 rounded hover:bg-gray-200 md:hidden"
-          onClick={onClose}
-          aria-label="Fermer le menu"
-        >
-          <X className="h-5 w-5" />
-        </button>
-      )}
       <div className={cn("p-6 border-b", collapsed && "px-2 py-4")}> 
         <div className="flex items-center space-x-2 mb-2 justify-center md:justify-start">
           <Building2 className="h-6 w-6 text-blue-600" />
           {!collapsed && (
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">Gestion des Contrats</h2>
+              <h2 className="text-lg font-semibold text-gray-900">Gestionnaire des Contrats</h2>
               <div className="text-xs text-gray-600 leading-tight">
                 <div>SARL GROUPE CMMCZ</div>
                 <div>I OULED SALAH EMIR ABDELKADER W. JIJEL</div>

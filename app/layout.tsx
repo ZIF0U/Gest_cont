@@ -7,9 +7,8 @@ import { Toaster } from "@/components/ui/toaster"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Gestion des Contrats - SARL GROUPE CMMCZ",
+  title: "Gestionnaire des Contrats",
   description: "Application de gestion des contrats d'employés",
-  generator: "v0.dev",
 }
 
 import AuthGuard from "@/components/AuthGuard"
