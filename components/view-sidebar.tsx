@@ -69,10 +69,10 @@ export function ViewSidebar({ open = true, onClose }: { open?: boolean; onClose?
           <Building2 className="h-6 w-6 text-blue-600" />
           {!collapsed && (
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">Gestion des Contrats</h2>
+              <h2 className="text-lg font-semibold text-gray-900">Gestionnaire des Contrats</h2>
               <div className="text-xs text-gray-600 leading-tight">
-                <div>SARL GROUPE CMMCZ</div>
-                <div>I OULED SALAH EMIR ABDELKADER W. JIJEL</div>
+                <div>SARL GROUPE CMMC</div>
+                <div>Z.I OULED SALAH EMIR ABDELKADER W. JIJEL</div>
               </div>
             </div>
           )}
