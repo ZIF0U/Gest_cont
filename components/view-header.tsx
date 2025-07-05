@@ -22,10 +22,6 @@ export function ViewHeader() {
               <Building2 className="h-6 w-6 text-blue-600" />
               <div>
                 <h1 className="text-xl font-bold text-gray-900">Gestionnaire des Contrats</h1>
-                <div className="text-xs text-gray-600 leading-tight">
-                  <div>SARL GROUPE CMMC</div>
-                  <div>Z.I OULED SALAH EMIR ABDELKADER W. JIJEL</div>
-                </div>
               </div>
             </div>
           </div>

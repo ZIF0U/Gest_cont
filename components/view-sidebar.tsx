@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { FileText, AlertTriangle, Search, BarChart3, Building2, X, ChevronLeft, ChevronRight } from "lucide-react"
+import { FileText, AlertTriangle, Search, BarChart3, Building2, X, ChevronLeft, ChevronRight, User } from "lucide-react"
 import { useState } from "react"
 
 const navigation = [
@@ -40,7 +40,7 @@ export function ViewSidebar() {
 
   return (
     <div className={cn(
-      "bg-white shadow-sm border-r relative transition-all duration-200",
+      "bg-white shadow-sm border-r relative transition-all duration-200 flex flex-col",
       collapsed ? "w-16" : "w-80"
     )}>
       {/* Collapse/Expand arrow for desktop */}
@@ -52,23 +52,22 @@ export function ViewSidebar() {
       >
         {collapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
       </button>
+      
+      {/* Top section */}
       <div className={cn("p-6 border-b", collapsed && "px-2 py-4")}> 
         <div className="flex items-center space-x-2 mb-2 justify-center md:justify-start">
           <Building2 className="h-6 w-6 text-blue-600" />
           {!collapsed && (
             <div>
               <h2 className="text-lg font-semibold text-gray-900">Gestionnaire des Contrats</h2>
-              <div className="text-xs text-gray-600 leading-tight">
-                <div>SARL GROUPE CMMC</div>
-                <div>Z.I OULED SALAH EMIR ABDELKADER W. JIJEL</div>
-              </div>
             </div>
           )}
         </div>
         {!collapsed && <p className="text-sm text-gray-600">Consultez et gérez vos contrats</p>}
       </div>
 
-      <nav className={cn("p-4 space-y-2", collapsed && "p-2")}> 
+      {/* Navigation section */}
+      <nav className={cn("p-4 space-y-2 flex-1", collapsed && "p-2")}> 
         {navigation.map((item) => {
           const isActive = pathname === item.href
           return (
@@ -99,6 +98,25 @@ export function ViewSidebar() {
           )
         })}
       </nav>
+
+      {/* Bottom section with company info and user icon */}
+      <div className={cn("p-4 border-t bg-gray-50", collapsed && "p-2")}>
+        {!collapsed && (
+          <div className="text-xs text-gray-600 leading-tight mb-3">
+            <div>SARL GROUPE CMMC</div>
+            <div>Z.I OULED SALAH EMIR ABDELKADER W. JIJEL</div>
+          </div>
+        )}
+        <div className="flex items-center space-x-2">
+          <User className="h-5 w-5 text-gray-400" />
+          {!collapsed && (
+            <div className="text-sm text-gray-600">
+              <div className="font-medium">Admin</div>
+              <div className="text-xs text-gray-500">Utilisateur connecté</div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
