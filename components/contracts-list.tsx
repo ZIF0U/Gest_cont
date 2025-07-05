@@ -12,6 +12,7 @@ import { fr } from "date-fns/locale"
 import { RenewContractDialog } from "./renew-contract-dialog"
 import { ContractDetailsModal } from "./contract-details-modal"
 import { EditContractModal } from "./edit-contract-modal"
+import { DeleteConfirmationDialog } from "./delete-confirmation-dialog"
 
 interface Contract {
   id: number
@@ -37,6 +38,7 @@ export function ContractsList() {
   const [renewingContract, setRenewingContract] = useState<Contract | null>(null)
   const [selectedContract, setSelectedContract] = useState<Contract | null>(null)
   const [editingContract, setEditingContract] = useState<Contract | null>(null)
+  const [deletingContract, setDeletingContract] = useState<Contract | null>(null)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -58,22 +60,28 @@ export function ContractsList() {
     }
   }
 
-  const handleDelete = async (id: number) => {
-    if (confirm("Êtes-vous sûr de vouloir supprimer ce contrat ?")) {
-      try {
-        await deleteContract(id)
-        await loadContracts()
-        toast({
-          title: "Succès",
-          description: "Contrat supprimé avec succès",
-        })
-      } catch (error) {
-        toast({
-          title: "Erreur",
-          description: "Impossible de supprimer le contrat",
-          variant: "destructive",
-        })
-      }
+  const handleDelete = async (contract: Contract) => {
+    setDeletingContract(contract)
+  }
+
+  const confirmDelete = async () => {
+    if (!deletingContract) return
+
+    try {
+      await deleteContract(deletingContract.id)
+      await loadContracts()
+      toast({
+        title: "Succès",
+        description: "Contrat supprimé avec succès",
+      })
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer le contrat",
+        variant: "destructive",
+      })
+    } finally {
+      setDeletingContract(null)
     }
   }
 
@@ -187,7 +195,7 @@ export function ContractsList() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleDelete(contract.id)}
+                  onClick={() => handleDelete(contract)}
                   className="text-red-600 hover:text-red-700"
                 >
                   <Trash2 className="h-4 w-4 mr-1" />
@@ -216,6 +224,13 @@ export function ContractsList() {
         contract={editingContract}
         onClose={() => setEditingContract(null)}
         onSuccess={loadContracts}
+      />
+
+      <DeleteConfirmationDialog
+        isOpen={!!deletingContract}
+        onClose={() => setDeletingContract(null)}
+        onConfirm={confirmDelete}
+        contractName={deletingContract?.nom_prenom}
       />
     </>
   )

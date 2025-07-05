@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
 import { RenewContractDialog } from "./renew-contract-dialog"
+import { DeleteConfirmationDialog } from "./delete-confirmation-dialog"
 
 interface Contract {
   id: number
@@ -38,6 +39,7 @@ export function SearchContracts() {
   const [searchTerm, setSearchTerm] = useState("")
   const [searchType, setSearchType] = useState("all")
   const [renewingContract, setRenewingContract] = useState<Contract | null>(null)
+  const [deletingContract, setDeletingContract] = useState<Contract | null>(null)
   const { toast } = useToast()
 
   const handleSearch = async () => {
@@ -65,22 +67,28 @@ export function SearchContracts() {
     }
   }
 
-  const handleDelete = async (id: number) => {
-    if (confirm("Êtes-vous sûr de vouloir supprimer ce contrat ?")) {
-      try {
-        await deleteContract(id)
-        await handleSearch() // Refresh search results
-        toast({
-          title: "Succès",
-          description: "Contrat supprimé avec succès",
-        })
-      } catch (error) {
-        toast({
-          title: "Erreur",
-          description: "Impossible de supprimer le contrat",
-          variant: "destructive",
-        })
-      }
+  const handleDelete = async (contract: Contract) => {
+    setDeletingContract(contract)
+  }
+
+  const confirmDelete = async () => {
+    if (!deletingContract) return
+
+    try {
+      await deleteContract(deletingContract.id)
+      await handleSearch() // Refresh search results
+      toast({
+        title: "Succès",
+        description: "Contrat supprimé avec succès",
+      })
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer le contrat",
+        variant: "destructive",
+      })
+    } finally {
+      setDeletingContract(null)
     }
   }
 
@@ -224,7 +232,7 @@ export function SearchContracts() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleDelete(contract.id)}
+                    onClick={() => handleDelete(contract)}
                     className="text-red-600 hover:text-red-700"
                   >
                     <Trash2 className="h-4 w-4 mr-1" />
@@ -244,6 +252,13 @@ export function SearchContracts() {
           onClose={() => setRenewingContract(null)}
         />
       )}
+
+      <DeleteConfirmationDialog
+        isOpen={!!deletingContract}
+        onClose={() => setDeletingContract(null)}
+        onConfirm={confirmDelete}
+        contractName={deletingContract?.nom_prenom}
+      />
     </>
   )
 }
