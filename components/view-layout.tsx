@@ -57,7 +57,7 @@ export function ViewLayout({ onSwitchToAdd }: ViewLayoutProps) {
         return (
           <div className="space-y-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Gestionnaire des Contrats</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Tous les Contrats</h1>
               <p className="text-gray-600">Vue d'ensemble de tous vos contrats d'employés</p>
             </div>
             <StatsCards />
@@ -110,7 +110,7 @@ export function ViewLayout({ onSwitchToAdd }: ViewLayoutProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="hidden md:block">
-                <span className="text-lg text-black font-bold">Gestionnaire des Contrats</span>
+                <span className="text-3xl text-blue-600 font-bold">Gestionnaire des Contrats</span>
               </div>
             </div>
 
