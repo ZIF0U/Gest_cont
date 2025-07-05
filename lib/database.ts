@@ -126,13 +126,41 @@ export const renewContract = async (
   return renewedContract
 }
 
+// Helper function to get the latest contract for each person
+const getLatestContracts = (contracts: Contract[]): Contract[] => {
+  const contractMap = new Map<string, Contract>()
+  
+  contracts.forEach((contract) => {
+    const key = contract.carte_nationale // Use carte_nationale as unique identifier
+    const existing = contractMap.get(key)
+    
+    if (!existing) {
+      contractMap.set(key, contract)
+    } else {
+      // Keep the contract with the latest end date
+      const existingEndDate = new Date(existing.fin_contrat)
+      const currentEndDate = new Date(contract.fin_contrat)
+      
+      if (currentEndDate > existingEndDate) {
+        contractMap.set(key, contract)
+      }
+    }
+  })
+  
+  return Array.from(contractMap.values())
+}
+
 export const getExpiredContracts = async (): Promise<Contract[]> => {
   await new Promise((resolve) => setTimeout(resolve, 500))
 
   const contracts = getStoredContracts()
   const today = new Date()
 
-  return contracts.filter((contract) => new Date(contract.fin_contrat) < today)
+  // Get all contracts, filter out replaced ones, get latest for each person, then filter expired
+  const activeContracts = contracts.filter((contract) => !contract.is_replaced)
+  const latestContracts = getLatestContracts(activeContracts)
+  
+  return latestContracts.filter((contract) => new Date(contract.fin_contrat) < today)
 }
 
 export const searchContracts = async (searchTerm: string): Promise<Contract[]> => {
@@ -141,7 +169,11 @@ export const searchContracts = async (searchTerm: string): Promise<Contract[]> =
   const contracts = getStoredContracts()
   const term = searchTerm.toLowerCase()
 
-  return contracts.filter(
+  // Get all contracts, filter out replaced ones, get latest for each person, then filter by search term
+  const activeContracts = contracts.filter((contract) => !contract.is_replaced)
+  const latestContracts = getLatestContracts(activeContracts)
+  
+  return latestContracts.filter(
     (contract) =>
       contract.nom_prenom.toLowerCase().includes(term) ||
       contract.fonction.toLowerCase().includes(term) ||
