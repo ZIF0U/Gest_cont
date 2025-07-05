@@ -11,6 +11,7 @@ import { format } from "date-fns"
 import { fr } from "date-fns/locale"
 import { RenewContractDialog } from "./renew-contract-dialog"
 import { ContractDetailsModal } from "./contract-details-modal"
+import { EditContractModal } from "./edit-contract-modal"
 
 interface Contract {
   id: number
@@ -35,6 +36,7 @@ export function ContractsList() {
   const [loading, setLoading] = useState(true)
   const [renewingContract, setRenewingContract] = useState<Contract | null>(null)
   const [selectedContract, setSelectedContract] = useState<Contract | null>(null)
+  const [editingContract, setEditingContract] = useState<Contract | null>(null)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -165,7 +167,11 @@ export function ContractsList() {
                   <Eye className="h-4 w-4 mr-1" />
                   Voir
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setEditingContract(contract)}
+                >
                   <Edit className="h-4 w-4 mr-1" />
                   Modifier
                 </Button>
@@ -204,6 +210,12 @@ export function ContractsList() {
       <ContractDetailsModal
         contract={selectedContract}
         onClose={() => setSelectedContract(null)}
+      />
+
+      <EditContractModal
+        contract={editingContract}
+        onClose={() => setEditingContract(null)}
+        onSuccess={loadContracts}
       />
     </>
   )

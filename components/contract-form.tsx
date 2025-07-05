@@ -1,34 +1,70 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
-import { createContract } from "@/lib/database"
+import { createContract, updateContract } from "@/lib/database"
 import { Save, X } from "lucide-react"
+
+interface Contract {
+  id: number
+  carte_nationale: string
+  nom_prenom: string
+  date_naissance: string
+  lieu_naissance?: string
+  adresse?: string
+  fonction: string
+  date_recrutement?: string
+  debut_contrat: string
+  fin_contrat: string
+  salaire_base?: number | null
+  num_assurance_sociale?: string
+}
 
 interface ContractFormProps {
   onSuccess: () => void
+  contract?: Contract | null
+  isEditing?: boolean
 }
 
-export function ContractForm({ onSuccess }: ContractFormProps) {
+export function ContractForm({ onSuccess, contract, isEditing = false }: ContractFormProps) {
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
-    carte_nationale: "",
-    nom_prenom: "",
-    date_naissance: "",
-    lieu_naissance: "",
-    adresse: "",
-    fonction: "",
-    date_recrutement: "",
-    debut_contrat: "",
-    fin_contrat: "",
-    salaire_base: "",
-    num_assurance_sociale: "",
+    carte_nationale: contract?.carte_nationale || "",
+    nom_prenom: contract?.nom_prenom || "",
+    date_naissance: contract?.date_naissance || "",
+    lieu_naissance: contract?.lieu_naissance || "",
+    adresse: contract?.adresse || "",
+    fonction: contract?.fonction || "",
+    date_recrutement: contract?.date_recrutement || "",
+    debut_contrat: contract?.debut_contrat || "",
+    fin_contrat: contract?.fin_contrat || "",
+    salaire_base: contract?.salaire_base?.toString() || "",
+    num_assurance_sociale: contract?.num_assurance_sociale || "",
   })
+
+  // Update form data when contract prop changes
+  useEffect(() => {
+    if (contract) {
+      setFormData({
+        carte_nationale: contract.carte_nationale || "",
+        nom_prenom: contract.nom_prenom || "",
+        date_naissance: contract.date_naissance || "",
+        lieu_naissance: contract.lieu_naissance || "",
+        adresse: contract.adresse || "",
+        fonction: contract.fonction || "",
+        date_recrutement: contract.date_recrutement || "",
+        debut_contrat: contract.debut_contrat || "",
+        fin_contrat: contract.fin_contrat || "",
+        salaire_base: contract.salaire_base?.toString() || "",
+        num_assurance_sociale: contract.num_assurance_sociale || "",
+      })
+    }
+  }, [contract])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -63,21 +99,33 @@ export function ContractForm({ onSuccess }: ContractFormProps) {
     }
 
     try {
-      await createContract({
-        ...formData,
-        salaire_base: formData.salaire_base ? Number.parseFloat(formData.salaire_base) : null,
-      })
+      if (isEditing && contract) {
+        await updateContract(contract.id, {
+          ...formData,
+          salaire_base: formData.salaire_base ? Number.parseFloat(formData.salaire_base) : null,
+        })
 
-      toast({
-        title: "Succès",
-        description: "Contrat enregistré avec succès",
-      })
+        toast({
+          title: "Succès",
+          description: "Contrat modifié avec succès",
+        })
+      } else {
+        await createContract({
+          ...formData,
+          salaire_base: formData.salaire_base ? Number.parseFloat(formData.salaire_base) : null,
+        })
+
+        toast({
+          title: "Succès",
+          description: "Contrat enregistré avec succès",
+        })
+      }
 
       onSuccess()
     } catch (error) {
       toast({
         title: "Erreur",
-        description: "Impossible d'enregistrer le contrat",
+        description: isEditing ? "Impossible de modifier le contrat" : "Impossible d'enregistrer le contrat",
         variant: "destructive",
       })
     } finally {
@@ -275,7 +323,10 @@ export function ContractForm({ onSuccess }: ContractFormProps) {
         </Button>
         <Button type="submit" disabled={loading} className="px-6">
           <Save className="h-4 w-4 mr-2" />
-          {loading ? "Enregistrement..." : "Enregistrer le Contrat"}
+          {loading 
+            ? (isEditing ? "Modification..." : "Enregistrement...") 
+            : (isEditing ? "Modifier le Contrat" : "Enregistrer le Contrat")
+          }
         </Button>
       </div>
     </form>

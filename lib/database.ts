@@ -17,6 +17,7 @@ interface Contract {
   renewal_count?: number
   original_contract_id?: number
   is_renewal?: boolean
+  is_replaced?: boolean
 }
 
 // Simulation du stockage local
@@ -61,6 +62,28 @@ export const deleteContract = async (id: number): Promise<void> => {
   const contracts = getStoredContracts()
   const filteredContracts = contracts.filter((contract) => contract.id !== id)
   saveContracts(filteredContracts)
+}
+
+export const updateContract = async (id: number, contractData: Partial<Contract>): Promise<Contract> => {
+  await new Promise((resolve) => setTimeout(resolve, 500))
+
+  const contracts = getStoredContracts()
+  const contractIndex = contracts.findIndex((contract) => contract.id === id)
+
+  if (contractIndex === -1) {
+    throw new Error("Contract not found")
+  }
+
+  const updatedContract = {
+    ...contracts[contractIndex],
+    ...contractData,
+    id, // Ensure ID remains the same
+  }
+
+  contracts[contractIndex] = updatedContract
+  saveContracts(contracts)
+
+  return updatedContract
 }
 
 export const renewContract = async (
