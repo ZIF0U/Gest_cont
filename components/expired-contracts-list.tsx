@@ -121,17 +121,9 @@ export function ExpiredContractsList() {
                 <div>
                   <CardTitle className="text-lg text-red-800">{contract.nom_prenom}</CardTitle>
                   <p className="text-sm text-red-600">{contract.fonction}</p>
-                  {contract.renewal_count && contract.renewal_count > 0 && (
-                    <p className="text-xs text-blue-600 mt-1">Renouvelé: {contract.renewal_count} fois</p>
-                  )}
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="destructive">Expiré</Badge>
-                  {contract.is_renewal && (
-                    <Badge variant="secondary" className="text-xs">
-                      Renouvelé
-                    </Badge>
-                  )}
                 </div>
               </div>
             </CardHeader>
