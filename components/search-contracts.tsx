@@ -7,13 +7,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Eye, Edit, Trash2, RefreshCw, Search } from "lucide-react"
-import { searchContracts, deleteContract, renewContract } from "@/lib/database"
+import { Search } from "lucide-react"
+import { searchContracts } from "@/lib/database"
 import { useToast } from "@/hooks/use-toast"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
-import { RenewContractDialog } from "./renew-contract-dialog"
-import { DeleteConfirmationDialog } from "./delete-confirmation-dialog"
+
 
 interface Contract {
   id: number
@@ -38,8 +37,6 @@ export function SearchContracts() {
   const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [searchType, setSearchType] = useState("all")
-  const [renewingContract, setRenewingContract] = useState<Contract | null>(null)
-  const [deletingContract, setDeletingContract] = useState<Contract | null>(null)
   const { toast } = useToast()
 
   const handleSearch = async () => {
@@ -67,54 +64,7 @@ export function SearchContracts() {
     }
   }
 
-  const handleDelete = async (contract: Contract) => {
-    setDeletingContract(contract)
-  }
 
-  const confirmDelete = async () => {
-    if (!deletingContract) return
-
-    try {
-      await deleteContract(deletingContract.id)
-      await handleSearch() // Refresh search results
-      toast({
-        title: "Succès",
-        description: "Contrat supprimé avec succès",
-      })
-    } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible de supprimer le contrat",
-        variant: "destructive",
-      })
-    } finally {
-      setDeletingContract(null)
-    }
-  }
-
-  const handleRenewContract = async (renewalData: {
-    salaire_base?: number | null
-    debut_contrat: string
-    fin_contrat: string
-  }) => {
-    if (!renewingContract) return
-
-    try {
-      await renewContract(renewingContract.id, renewalData)
-      await handleSearch() // Refresh search results
-      setRenewingContract(null)
-      toast({
-        title: "Succès",
-        description: "Contrat renouvelé avec succès",
-      })
-    } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible de renouveler le contrat",
-        variant: "destructive",
-      })
-    }
-  }
 
   const isExpired = (finContrat: string) => {
     return new Date() > new Date(finContrat)
@@ -211,54 +161,13 @@ export function SearchContracts() {
                     </div>
                   )}
                 </div>
-                <div className="flex space-x-2 mt-4">
-                  <Button variant="outline" size="sm">
-                    <Eye className="h-4 w-4 mr-1" />
-                    Voir
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <Edit className="h-4 w-4 mr-1" />
-                    Modifier
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setRenewingContract(contract)}
-                    className="text-green-600 hover:text-green-700"
-                  >
-                    <RefreshCw className="h-4 w-4 mr-1" />
-                    Renouveler
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleDelete(contract)}
-                    className="text-red-600 hover:text-red-700"
-                  >
-                    <Trash2 className="h-4 w-4 mr-1" />
-                    Supprimer
-                  </Button>
-                </div>
+
               </CardContent>
             </Card>
           ))}
         </div>
       )}
 
-      {renewingContract && (
-        <RenewContractDialog
-          contract={renewingContract}
-          onRenew={handleRenewContract}
-          onClose={() => setRenewingContract(null)}
-        />
-      )}
-
-      <DeleteConfirmationDialog
-        isOpen={!!deletingContract}
-        onClose={() => setDeletingContract(null)}
-        onConfirm={confirmDelete}
-        contractName={deletingContract?.nom_prenom}
-      />
     </>
   )
 }
