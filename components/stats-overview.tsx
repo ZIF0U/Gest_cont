@@ -48,9 +48,9 @@ export function StatsOverview() {
         .map(([fonction, count]) => ({ fonction, count }))
         .sort((a, b) => b.count - a.count)
 
-      // Contrats récents
-      const recentContracts = contracts
-        .sort((a, b) => new Date(b.debut_contrat).getTime() - new Date(a.debut_contrat).getTime())
+      // Contrats récents (only active contracts)
+      const recentContracts = active
+        .sort((a, b) => new Date(a.fin_contrat).getTime() - new Date(b.fin_contrat).getTime())
         .slice(0, 5)
 
       setData({
@@ -142,7 +142,7 @@ export function StatsOverview() {
 
       <Card className="lg:col-span-2">
         <CardHeader>
-          <CardTitle>Contrats Récents</CardTitle>
+          <CardTitle>Contrats Récents (Actifs)</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
@@ -154,9 +154,9 @@ export function StatsOverview() {
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-medium">
-                    {format(new Date(contract.debut_contrat), "dd/MM/yyyy", { locale: fr })}
+                    {format(new Date(contract.fin_contrat), "dd/MM/yyyy", { locale: fr })}
                   </p>
-                  <p className="text-xs text-gray-500">Début de contrat</p>
+                  <p className="text-xs text-gray-500">Fin de contrat</p>
                 </div>
               </div>
             ))}
