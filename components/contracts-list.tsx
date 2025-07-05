@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
 import { RenewContractDialog } from "./renew-contract-dialog"
+import { ContractDetailsModal } from "./contract-details-modal"
 
 interface Contract {
   id: number
@@ -33,6 +34,7 @@ export function ContractsList() {
   const [contracts, setContracts] = useState<Contract[]>([])
   const [loading, setLoading] = useState(true)
   const [renewingContract, setRenewingContract] = useState<Contract | null>(null)
+  const [selectedContract, setSelectedContract] = useState<Contract | null>(null)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export function ContractsList() {
   const loadContracts = async () => {
     try {
       const data = await getContracts()
-      setContracts(data)
+      setContracts(data as Contract[])
     } catch (error) {
       toast({
         title: "Erreur",
@@ -163,7 +165,11 @@ export function ContractsList() {
                 )}
               </div>
               <div className="flex space-x-2 mt-4">
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setSelectedContract(contract)}
+                >
                   <Eye className="h-4 w-4 mr-1" />
                   Voir
                 </Button>
@@ -202,6 +208,11 @@ export function ContractsList() {
           onClose={() => setRenewingContract(null)}
         />
       )}
+
+      <ContractDetailsModal
+        contract={selectedContract}
+        onClose={() => setSelectedContract(null)}
+      />
     </>
   )
 }

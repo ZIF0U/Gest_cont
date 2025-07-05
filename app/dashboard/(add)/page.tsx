@@ -1,6 +1,7 @@
 import { ContractForm } from "@/components/contract-form"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { UserPlus } from "lucide-react"
+import { toast } from "sonner"
 
 export default function AddContractPage() {
   return (
@@ -21,7 +22,9 @@ export default function AddContractPage() {
           <CardTitle className="text-xl text-gray-900">Informations du Contrat</CardTitle>
         </CardHeader>
         <CardContent className="p-8">
-          <ContractForm />
+          <ContractForm onSuccess={() => {
+            toast.success("Contrat créé avec succès")
+          }} />
         </CardContent>
       </Card>
     </div>

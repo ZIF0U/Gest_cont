@@ -1,30 +1,119 @@
-# Electron desktop app
+# Gest_contrat - Contract Management System
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+A modern contract management application built with Next.js, TypeScript, and Tailwind CSS.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/12arnesto-9974s-projects/v0-electron-desktop-app)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/xuT6Vw3hjXs)
+## Project Structure
 
-## Overview
+```
+Gest_contrat/
+├── app/                          # Next.js App Router
+│   ├── (view)/                   # View routes (contracts, stats, search, expired)
+│   ├── dashboard/                # Dashboard routes
+│   │   └── (add)/               # Add contract functionality
+│   ├── login/                    # Authentication
+│   ├── search/                   # Search functionality
+│   ├── user-dashboard/           # User dashboard (empty)
+│   ├── globals.css              # Global styles
+│   ├── layout.tsx               # Root layout
+│   └── page.tsx                 # Home page
+├── components/                   # React components
+│   ├── ui/                      # Reusable UI components (shadcn/ui)
+│   ├── AuthGuard.tsx            # Authentication guard
+│   ├── contract-form.tsx        # Contract form component
+│   ├── contract-manager.tsx     # Contract management
+│   ├── contracts-list.tsx       # Contracts list display
+│   ├── expired-contracts-list.tsx # Expired contracts
+│   ├── HeaderBar.tsx            # Header component
+│   ├── renew-contract-dialog.tsx # Contract renewal dialog
+│   ├── search-contracts.tsx     # Search functionality
+│   ├── stats-cards.tsx          # Statistics cards
+│   ├── stats-overview.tsx       # Statistics overview
+│   ├── theme-provider.tsx       # Theme provider
+│   ├── view-header.tsx          # View header
+│   ├── view-layout.tsx          # View layout
+│   └── view-sidebar.tsx         # View sidebar
+├── contexts/                    # React contexts
+│   └── user-context.tsx         # User context
+├── hooks/                       # Custom React hooks
+│   ├── use-mobile.tsx          # Mobile detection hook
+│   └── use-toast.ts            # Toast notification hook
+├── lib/                        # Utility libraries
+│   ├── database.ts             # Database utilities
+│   └── utils.ts                # General utilities
+├── public/                     # Static assets
+├── scripts/                    # Database scripts
+│   ├── init-database.sql       # Database initialization
+│   └── seed-data.sql           # Sample data
+└── electron.js                 # Electron configuration
+```
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+## Key Features
 
-## Deployment
+- **Contract Management**: Add, view, and manage contracts
+- **Search Functionality**: Search through contracts
+- **Statistics Dashboard**: View contract statistics
+- **Expired Contracts**: Track and manage expired contracts
+- **Responsive Design**: Mobile-friendly interface
+- **Dark Mode Support**: Theme switching capability
+- **Authentication**: User authentication system
 
-Your project is live at:
+## Technologies Used
 
-**[https://vercel.com/12arnesto-9974s-projects/v0-electron-desktop-app](https://vercel.com/12arnesto-9974s-projects/v0-electron-desktop-app)**
+- **Next.js 14**: React framework with App Router
+- **TypeScript**: Type-safe JavaScript
+- **Tailwind CSS**: Utility-first CSS framework
+- **shadcn/ui**: Reusable UI components
+- **SQLite**: Database (via scripts)
+- **Electron**: Desktop application support
 
-## Build your app
+## Getting Started
 
-Continue building your app on:
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-**[https://v0.dev/chat/projects/xuT6Vw3hjXs](https://v0.dev/chat/projects/xuT6Vw3hjXs)**
+2. Initialize the database:
+   ```bash
+   # Run the database initialization script
+   ```
 
-## How It Works
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Project Organization
+
+### Components Structure
+- **UI Components** (`components/ui/`): Reusable shadcn/ui components
+- **Feature Components** (`components/`): Application-specific components
+- **Layout Components**: Header, sidebar, and layout components
+
+### Hooks
+- **use-mobile**: Responsive design hook for mobile detection
+- **use-toast**: Toast notification system
+
+### Contexts
+- **user-context**: User authentication and state management
+
+### Database
+- SQL scripts for initialization and sample data
+- Database utilities in `lib/database.ts`
+
+## Development Notes
+
+- The project uses Next.js App Router for routing
+- All UI components are built with shadcn/ui for consistency
+- Mobile-first responsive design
+- TypeScript for type safety
+- Tailwind CSS for styling
+
+## Recent Cleanup
+
+- Removed duplicate CSS files (kept `app/globals.css`)
+- Removed duplicate hook files (kept `hooks/` directory)
+- Removed duplicate package lock files (kept `package-lock.json`)
+- Organized imports to use correct paths
