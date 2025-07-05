@@ -1,12 +1,20 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Plus, Building2 } from "lucide-react"
+import { Plus, Building2, LogOut } from "lucide-react"
 
 export function ViewHeader() {
+  const router = useRouter()
+
+  const handleLogout = () => {
+    localStorage.removeItem("isAdmin")
+    router.replace("/login")
+  }
+
   return (
-    <header className="bg-white shadow-sm border-b">
+    <header className="bg-white shadow-sm border-b w-full">
       <div className="px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
@@ -20,17 +28,20 @@ export function ViewHeader() {
                 </div>
               </div>
             </div>
-            <div className="hidden md:block">
-              <span className="text-sm text-gray-500">Mode Consultation</span>
-            </div>
           </div>
 
-          <Link href="/add">
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Nouveau Contrat
+          <div className="flex items-center space-x-3">
+            <Link href="/add">
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                NOUVEAU CONTRAT
+              </Button>
+            </Link>
+            <Button variant="outline" onClick={handleLogout}>
+              <LogOut className="h-4 w-4 mr-2" />
+              SE DÉCONNECTER
             </Button>
-          </Link>
+          </div>
         </div>
       </div>
     </header>

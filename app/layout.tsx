@@ -13,7 +13,6 @@ export const metadata: Metadata = {
 }
 
 import AuthGuard from "@/components/AuthGuard"
-import HeaderBar from "@/components/HeaderBar"
 
 export default function RootLayout({
   children,
@@ -25,7 +24,6 @@ export default function RootLayout({
       <body className={inter.className}>
         <UserProvider>
           <AuthGuard>
-            <HeaderBar />
             {children}
           </AuthGuard>
         </UserProvider>

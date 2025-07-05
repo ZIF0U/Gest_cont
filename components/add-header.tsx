@@ -1,12 +1,20 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Building2, Eye } from "lucide-react"
+import { ArrowLeft, Building2, Eye, LogOut } from "lucide-react"
 
 export function AddHeader() {
+  const router = useRouter()
+
+  const handleLogout = () => {
+    localStorage.removeItem("isAdmin")
+    router.replace("/login")
+  }
+
   return (
-    <header className="bg-white shadow-sm border-b">
+    <header className="bg-white shadow-sm border-b w-full">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
@@ -19,9 +27,6 @@ export function AddHeader() {
                   <div>Z.I OULED SALAH EMIR ABDELKADER W. JIJEL</div>
                 </div>
               </div>
-            </div>
-            <div className="hidden md:block">
-              <span className="text-sm text-gray-500">Mode Ajout</span>
             </div>
           </div>
 
@@ -38,6 +43,10 @@ export function AddHeader() {
                 Retour
               </Button>
             </Link>
+            <Button variant="outline" size="sm" onClick={handleLogout}>
+              <LogOut className="h-4 w-4 mr-2" />
+              SE DÉCONNECTER
+            </Button>
           </div>
         </div>
       </div>
