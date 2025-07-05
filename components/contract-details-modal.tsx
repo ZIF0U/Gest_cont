@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
 import { Calendar, MapPin, User, FileText, DollarSign, Shield, RefreshCw } from "lucide-react"
+import { exportContractToPDF } from "@/lib/pdf-export"
 
 interface Contract {
   id: number
@@ -25,6 +26,7 @@ interface Contract {
   renewal_count?: number
   original_contract_id?: number
   is_renewal?: boolean
+  is_replaced?: boolean
 }
 
 interface ContractDetailsModalProps {
@@ -90,10 +92,18 @@ export function ContractDetailsModal({ contract, onClose }: ContractDetailsModal
     <Dialog open={!!contract} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-            <User className="h-6 w-6" />
-            Détails du Contrat - {contract.nom_prenom}
-          </DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="text-2xl font-bold flex items-center gap-2">
+              <User className="h-6 w-6" />
+              Détails du Contrat - {contract.nom_prenom}
+            </DialogTitle>
+            <button
+              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-medium"
+              onClick={() => exportContractToPDF(contract)}
+            >
+              Exporter en PDF
+            </button>
+          </div>
         </DialogHeader>
 
         <div className="space-y-6">
