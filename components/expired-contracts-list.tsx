@@ -4,14 +4,12 @@ import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Eye, Edit, Trash2, RefreshCw } from "lucide-react"
-import { getExpiredContracts, deleteContract, renewContract } from "@/lib/database"
+import { RefreshCw } from "lucide-react"
+import { getExpiredContracts, renewContract } from "@/lib/database"
 import { useToast } from "@/hooks/use-toast"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
 import { RenewContractDialog } from "./renew-contract-dialog"
-import { EditContractModal } from "./edit-contract-modal"
-import { DeleteConfirmationDialog } from "./delete-confirmation-dialog"
 
 interface Contract {
   id: number
@@ -35,8 +33,6 @@ export function ExpiredContractsList() {
   const [contracts, setContracts] = useState<Contract[]>([])
   const [loading, setLoading] = useState(true)
   const [renewingContract, setRenewingContract] = useState<Contract | null>(null)
-  const [editingContract, setEditingContract] = useState<Contract | null>(null)
-  const [deletingContract, setDeletingContract] = useState<Contract | null>(null)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -58,30 +54,7 @@ export function ExpiredContractsList() {
     }
   }
 
-  const handleDelete = async (contract: Contract) => {
-    setDeletingContract(contract)
-  }
 
-  const confirmDelete = async () => {
-    if (!deletingContract) return
-
-    try {
-      await deleteContract(deletingContract.id)
-      await loadExpiredContracts()
-      toast({
-        title: "Succès",
-        description: "Contrat supprimé avec succès",
-      })
-    } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible de supprimer le contrat",
-        variant: "destructive",
-      })
-    } finally {
-      setDeletingContract(null)
-    }
-  }
 
   const handleRenewContract = async (renewalData: {
     salaire_base?: number | null
@@ -161,18 +134,6 @@ export function ExpiredContractsList() {
                 )}
               </div>
               <div className="flex space-x-2 mt-4">
-                <Button variant="outline" size="sm">
-                  <Eye className="h-4 w-4 mr-1" />
-                  Voir
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => setEditingContract(contract)}
-                >
-                  <Edit className="h-4 w-4 mr-1" />
-                  Modifier
-                </Button>
                 <Button
                   variant="outline"
                   size="sm"
@@ -181,15 +142,6 @@ export function ExpiredContractsList() {
                 >
                   <RefreshCw className="h-4 w-4 mr-1" />
                   Renouveler
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleDelete(contract)}
-                  className="text-red-600 hover:text-red-700"
-                >
-                  <Trash2 className="h-4 w-4 mr-1" />
-                  Supprimer
                 </Button>
               </div>
             </CardContent>
@@ -204,19 +156,6 @@ export function ExpiredContractsList() {
           onClose={() => setRenewingContract(null)}
         />
       )}
-
-      <EditContractModal
-        contract={editingContract}
-        onClose={() => setEditingContract(null)}
-        onSuccess={loadExpiredContracts}
-      />
-
-      <DeleteConfirmationDialog
-        isOpen={!!deletingContract}
-        onClose={() => setDeletingContract(null)}
-        onConfirm={confirmDelete}
-        contractName={deletingContract?.nom_prenom}
-      />
     </>
   )
 }
